@@ -1,9 +1,5 @@
 import Dados.Dados;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -27,15 +23,10 @@ public class Main {
         System.out.println(" ");
         System.out.println("O jogador que mais recebeu cartões vermelhos");
         System.out.println(Dados.getJogadorQueMaisRecebeuCartoesVermelhos());
-
-
-//      O placar da partida com mais gols.
-
-
+        System.out.println(" ");
+        System.out.println("O placar da partida com mais gols");
+        System.out.println(Dados.getPartidaComMaisGols());
 
     }
-
-
-
 
 }

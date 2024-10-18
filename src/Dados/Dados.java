@@ -2,9 +2,9 @@ package Dados;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
@@ -17,8 +17,8 @@ public class Dados {
 
     public static List<Cartoes> cartoes() {
         try{
-            String filePath = currentDir + File.separator + "src" + File.separator + "Dados" + File.separator + "campeonato-brasileiro-cartoes.csv";
-            List<Cartoes> cartoes = new CsvToBeanBuilder<Cartoes>(new FileReader(filePath))
+            Path filePath = Paths.get(currentDir, "src", "Dados", "campeonato-brasileiro-cartoes.csv");
+            List<Cartoes> cartoes = new CsvToBeanBuilder<Cartoes>(new FileReader(String.valueOf(filePath)))
                     .withType(Cartoes.class)
                     .build()
                     .parse();
@@ -31,8 +31,8 @@ public class Dados {
 
     public static List<Gols> gols() {
         try{
-            String filePath = currentDir + File.separator + "src" + File.separator + "Dados" + File.separator + "campeonato-brasileiro-gols.csv";
-            List<Gols> gols = new CsvToBeanBuilder<Gols>(new FileReader(filePath))
+            Path filePath = Paths.get(currentDir, "src", "Dados", "campeonato-brasileiro-gols.csv");
+            List<Gols> gols = new CsvToBeanBuilder<Gols>(new FileReader(String.valueOf(filePath)))
                     .withType(Gols.class)
                     .build()
                     .parse();
@@ -45,8 +45,8 @@ public class Dados {
 
     public static List<Estatisticas> estatisticas() {
         try{
-            String filePath = currentDir + File.separator + "src" + File.separator + "Dados" + File.separator + "campeonato-brasileiro-estatisticas-full.csv";
-            List<Estatisticas> estatisticas = new CsvToBeanBuilder<Estatisticas>(new FileReader(filePath))
+            Path filePath = Paths.get(currentDir, "src", "Dados", "campeonato-brasileiro-estatisticas-full.csv");
+            List<Estatisticas> estatisticas = new CsvToBeanBuilder<Estatisticas>(new FileReader(String.valueOf(filePath)))
                     .withType(Estatisticas.class)
                     .build()
                     .parse();
@@ -59,8 +59,8 @@ public class Dados {
 
     public static List<Campeonato> campeonato() {
         try{
-            String filePath = currentDir + File.separator + "src" + File.separator + "Dados" + File.separator + "campeonato-brasileiro-full.csv";
-            List<Campeonato> campeonato = new CsvToBeanBuilder<Campeonato>(new FileReader(filePath))
+            Path filePath = Paths.get(currentDir, "src", "Dados", "campeonato-brasileiro-full.csv");
+            List<Campeonato> campeonato = new CsvToBeanBuilder<Campeonato>(new FileReader(String.valueOf(filePath)))
                     .withType(Campeonato.class)
                     .build()
                     .parse();
@@ -72,40 +72,31 @@ public class Dados {
     }
 
     public static List<Map.Entry<String, Long>> getTimeQueMaisVenceu2008() {
-        return campeonato().stream()
+        Map<String, Long> vencedores2008 = campeonato().stream()
                 .filter(data -> data.getData().contains("2008"))
                 .filter(campo -> !Objects.equals(campo.getVencedor(), "-"))
-                .collect(Collectors.groupingBy(
-                        vencedor -> vencedor.getVencedor(),
-                        Collectors.counting())).entrySet().stream().filter(valor -> {
-                    return valor.getValue().equals(getMaiorNumerosDePartidasVencidas2008());
-                }).collect(Collectors.toList());
+                .collect(Collectors.groupingBy(vencedor -> vencedor.getVencedor(), Collectors.counting()));
+
+        Long maxVitorias = vencedores2008.values().stream()
+                .max(Long::compare)
+                .orElse(0L);
+
+        return vencedores2008.entrySet().stream()
+                .filter(entrada -> entrada.getValue().equals(maxVitorias)).collect(Collectors.toList());
     }
 
-    public static Long getMaiorNumerosDePartidasVencidas2008() {
-        return campeonato().stream()
-                .filter(data -> data.getData().contains("2008"))
-                .filter(campo -> !Objects.equals(campo.getVencedor(), "-"))
-                .collect(Collectors.groupingBy(
-                        vencedor -> vencedor.getVencedor(),
-                        Collectors.counting())).entrySet().stream()
-                .max(Comparator.comparing(Map.Entry::getValue))
-                .map(Map.Entry::getValue).orElse(null);
-    }
 
-    public static String getEstadoComMenosJogos() {
+    public static Map.Entry<String, Long> getEstadoComMenosJogos() {
         return campeonato().stream()
                 .filter(jogo -> {
-                    String[] dataParts = jogo.getData().toString().split("/");
-                    int ano = Integer.parseInt(dataParts[2]);
+                    String[] dataAno = jogo.getData().toString().split("/");
+                    int ano = Integer.parseInt(dataAno[2]);
                     return ano >= 2003 && ano <= 2022;
                 }).collect(Collectors.groupingBy(
                         jogo -> jogo.getMandante_Estado(),
                         Collectors.counting()))
                 .entrySet().stream()
-                .min(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse("Nenhum jogo encontrado");
+                .min(Map.Entry.comparingByValue()).get();
     }
 
     public static Map.Entry<String, Long> getJogadorQueMaisFezGols() {
@@ -141,5 +132,14 @@ public class Dados {
                 .filter(cartao -> Objects.equals(cartao.getCartao(), "Vermelho"))
                 .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
                 .entrySet().stream().max(Map.Entry.comparingByValue()).get();
+    }
+
+    public static List<Campeonato> getPartidaComMaisGols() {
+        var idPartidaComMaisGols =  Dados.gols().stream()
+                .collect(Collectors.groupingBy(partida_id -> partida_id.getPartida_id(), Collectors.counting()))
+                .entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
+
+        return Dados.campeonato().stream()
+                .filter(entrada -> entrada.getID().equals(idPartidaComMaisGols)).collect(Collectors.toList());
     }
 }
