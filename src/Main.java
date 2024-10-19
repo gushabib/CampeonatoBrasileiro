@@ -1,4 +1,4 @@
-import Dados.Dados;
+import funcoes.Dados;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,19 +10,19 @@ public class Main {
         System.out.println(Dados.getEstadoComMenosJogos());
         System.out.println(" ");
         System.out.println("O jogador que mais fez gols");
-        System.out.println(Dados.getJogadorQueMaisFezGols());
+        System.out.println(Dados.getJogadorQueMaisFezGols(false, "Gol Contra"));
         System.out.println(" ");
         System.out.println("O jogador que mais fez gols de pênaltis");
-        System.out.println(Dados.getJogadorQueMaisFezGolsDePenalty());
+        System.out.println(Dados.getJogadorQueMaisFezGols(true, "Penalty"));
         System.out.println(" ");
         System.out.println("O jogador que mais fez gols contras");
-        System.out.println(Dados.getJogadorQueMaisFezGolsContra());
+        System.out.println(Dados.getJogadorQueMaisFezGols(true, "Gol Contra"));
         System.out.println(" ");
         System.out.println("O jogador que mais recebeu cartões amarelos");
-        System.out.println(Dados.getJogadorQueMaisRecebeuCartoesAmarelos());
+        System.out.println(Dados.getJogadorQueMaisRecebeuCartoes("Amarelo"));
         System.out.println(" ");
         System.out.println("O jogador que mais recebeu cartões vermelhos");
-        System.out.println(Dados.getJogadorQueMaisRecebeuCartoesVermelhos());
+        System.out.println(Dados.getJogadorQueMaisRecebeuCartoes("Vermelho"));
         System.out.println(" ");
         System.out.println("O placar da partida com mais gols");
         System.out.println(Dados.getPartidaComMaisGols());

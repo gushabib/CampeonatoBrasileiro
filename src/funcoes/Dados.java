@@ -1,4 +1,5 @@
-package Dados;
+package funcoes;
+import Dados.*;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -6,7 +7,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -99,37 +99,23 @@ public class Dados {
                 .min(Map.Entry.comparingByValue()).get();
     }
 
-    public static Map.Entry<String, Long> getJogadorQueMaisFezGols() {
-        return gols().stream()
-                .filter(gol -> !Objects.equals(gol.getTipo_de_gol(), "Gol Contra"))
-                .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
-                .entrySet().stream().max(Map.Entry.comparingByValue()).get();
+    public static Map.Entry<String, Long> getJogadorQueMaisFezGols(Boolean teste, String tipoGol) {
+        if(teste){
+            return gols().stream()
+                    .filter(gol -> Objects.equals(gol.getTipo_de_gol(), tipoGol))
+                    .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
+                    .entrySet().stream().max(Map.Entry.comparingByValue()).get();
+        }else{
+            return gols().stream()
+                    .filter(gol -> !Objects.equals(gol.getTipo_de_gol(), tipoGol))
+                    .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
+                    .entrySet().stream().max(Map.Entry.comparingByValue()).get();
+        }
     }
 
-    public static Map.Entry<String, Long> getJogadorQueMaisFezGolsDePenalty() {
-        return gols().stream()
-                .filter(gol -> Objects.equals(gol.getTipo_de_gol(), "Penalty"))
-                .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
-                .entrySet().stream().max(Map.Entry.comparingByValue()).get();
-    }
-
-    public static Map.Entry<String, Long> getJogadorQueMaisFezGolsContra() {
-        return gols().stream()
-                .filter(gol -> Objects.equals(gol.getTipo_de_gol(), "Gol Contra"))
-                .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
-                .entrySet().stream().max(Map.Entry.comparingByValue()).get();
-    }
-
-    public static Map.Entry<String, Long> getJogadorQueMaisRecebeuCartoesAmarelos() {
+    public static Map.Entry<String, Long> getJogadorQueMaisRecebeuCartoes(String cor) {
         return cartoes().stream()
-                .filter(cartao -> Objects.equals(cartao.getCartao(), "Amarelo"))
-                .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
-                .entrySet().stream().max(Map.Entry.comparingByValue()).get();
-    }
-
-    public static Map.Entry<String, Long> getJogadorQueMaisRecebeuCartoesVermelhos() {
-        return cartoes().stream()
-                .filter(cartao -> Objects.equals(cartao.getCartao(), "Vermelho"))
+                .filter(cartao -> Objects.equals(cartao.getCartao(), cor))
                 .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
                 .entrySet().stream().max(Map.Entry.comparingByValue()).get();
     }
