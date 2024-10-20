@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Dados {
+public class GetDados {
     private static String currentDir = System.getProperty("user.dir");
 
     public static List<Cartoes> cartoes() {
@@ -121,11 +121,11 @@ public class Dados {
     }
 
     public static List<Campeonato> getPartidaComMaisGols() {
-        var idPartidaComMaisGols =  Dados.gols().stream()
+        var idPartidaComMaisGols =  GetDados.gols().stream()
                 .collect(Collectors.groupingBy(partida_id -> partida_id.getPartida_id(), Collectors.counting()))
                 .entrySet().stream().max(Map.Entry.comparingByValue()).get().getKey();
 
-        return Dados.campeonato().stream()
+        return GetDados.campeonato().stream()
                 .filter(entrada -> entrada.getID().equals(idPartidaComMaisGols)).collect(Collectors.toList());
     }
 }
