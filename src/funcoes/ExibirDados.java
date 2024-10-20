@@ -13,7 +13,6 @@ public class ExibirDados {
 
     public static void exibirDados (){
 
-        // Apresentando os resultados
         System.out.println("=================================================");
         System.out.println("Estatísticas do Futebol");
         System.out.println("=================================================");
