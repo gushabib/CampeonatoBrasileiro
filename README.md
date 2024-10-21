@@ -1,6 +1,6 @@
 # ESTATÍSTICAS DO CAMPEONATO BRASILEIRO
 
-O objetivo desse projeto era criar um programa para ler as informações de alguns arquivos CSV´s com dados do campeonato brasileiro dos anos de 2003 a 2022 e criar algumas estatísticas utilizando o que aprendemos no módulo Técnicas de Programação I.
+O objetivo desse projeto era criar um programa para ler as informações de alguns arquivos CSV´s com dados do campeonato brasileiro dos anos de 2003 a 2023 e criar algumas estatísticas utilizando o que aprendemos no módulo Técnicas de Programação I.
 
 ## 🚀 Começando
 
