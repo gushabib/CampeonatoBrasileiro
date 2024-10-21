@@ -38,8 +38,8 @@ Para que o sistema rode, procure o arquivo Main dentro da pasta SRC, abra e rode
 Mencione as ferramentas que você usou para criar seu projeto
 
 * [Intellij](https://www.jetbrains.com/pt-br/idea/) - O framework web usado
-* [OpneCSV](https://opencsv.sourceforge.net/) - Dependência Utilizada
+* [OpenCSV](https://opencsv.sourceforge.net/) - Dependência Utilizada
 
 ## ✒️ Autor
 
-* **Um desenvolvedor** - *Trabalho Inicial* - [Desenvolvedor](https://github.com/gushabib)
+* **Gustavo Habib** - [Desenvolvedor](https://github.com/gushabib)
