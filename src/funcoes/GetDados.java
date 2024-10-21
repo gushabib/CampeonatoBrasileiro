@@ -71,9 +71,9 @@ public class GetDados {
         }
     }
 
-    public static List<Map.Entry<String, Long>> getTimeQueMaisVenceu2008() {
+    public static List<Map.Entry<String, Long>> getTimeQueMaisVenceu(String ano) {
         Map<String, Long> vencedores2008 = campeonato().stream()
-                .filter(data -> data.getData().contains("2008"))
+                .filter(data -> data.getData().contains(ano))
                 .filter(campo -> !Objects.equals(campo.getVencedor(), "-"))
                 .collect(Collectors.groupingBy(vencedor -> vencedor.getVencedor(), Collectors.counting()));
 
@@ -85,22 +85,26 @@ public class GetDados {
                 .filter(entrada -> entrada.getValue().equals(maxVitorias)).collect(Collectors.toList());
     }
 
-
-    public static Map.Entry<String, Long> getEstadoComMenosJogos() {
-        return campeonato().stream()
+    public static List<Map.Entry<String, Long>> getEstadoComMenosJogos(Integer anoInicial, Integer anoFinal) {
+        Map<String, Long> estadoMenosJogos = campeonato().stream()
                 .filter(jogo -> {
                     String[] dataAno = jogo.getData().toString().split("/");
                     int ano = Integer.parseInt(dataAno[2]);
-                    return ano >= 2003 && ano <= 2022;
+                    return ano >= anoInicial && ano <= anoFinal;
                 }).collect(Collectors.groupingBy(
                         jogo -> jogo.getMandante_Estado(),
-                        Collectors.counting()))
-                .entrySet().stream()
-                .min(Map.Entry.comparingByValue()).get();
+                        Collectors.counting()));
+
+        Long menosJogos = estadoMenosJogos.values().stream()
+                .min(Long::compare)
+                .orElse(0L);
+
+        return estadoMenosJogos.entrySet().stream()
+                .filter(entrada -> entrada.getValue().equals(menosJogos)).collect(Collectors.toList());
     }
 
-    public static Map.Entry<String, Long> getJogadorQueMaisFezGols(Boolean teste, String tipoGol) {
-        if(teste){
+    public static Map.Entry<String, Long> getJogadorQueMaisFezGols(Boolean incluirTipoGol, String tipoGol) {
+        if(incluirTipoGol){
             return gols().stream()
                     .filter(gol -> Objects.equals(gol.getTipo_de_gol(), tipoGol))
                     .collect(Collectors.groupingBy(jogador -> jogador.getAtleta(), Collectors.counting()))
